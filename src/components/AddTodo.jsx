@@ -1,16 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
-import { addTask } from "../redux/todo/todoSlice";
+import { addTask, editTask } from "../redux/todo/todoSlice";
 
-const AddTodo = () => {
+const AddTodo = ({ edit = null, setEdit }) => {
   const dispatch = useDispatch();
   const [task, setTask] = useState("");
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (edit) {
+      setTask(edit.task);
+    }
+  }, [edit]);
 
   const handleChange = (event) => {
     setTask(event.target.value);
@@ -19,8 +25,22 @@ const AddTodo = () => {
     }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleEditTask = () => {
+    if (task.trim()) {
+      dispatch(
+        editTask({
+          id: edit.id,
+          task: task,
+        })
+      );
+      setTask("");
+      setEdit(null);
+    } else {
+      setError(true);
+    }
+  };
+
+  const handleAddTask = () => {
     if (task.trim()) {
       dispatch(addTask(task));
       setTask("");
@@ -28,15 +48,27 @@ const AddTodo = () => {
       setError(true);
     }
   };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (edit) {
+      handleEditTask();
+    } else {
+      handleAddTask();
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <FormControl error={error} variant="standard">
-        <InputLabel htmlFor="component-error">Agregar nueva tarea</InputLabel>
+        <InputLabel htmlFor="component-error">
+          {edit ? "Editar tarea" : "Agregar nueva tarea"}
+        </InputLabel>
         <Input
           id="component-error"
           //   defaultValue="Composed TextField"
           aria-describedby="component-error-text"
-          vale={task}
+          value={task}
           onChange={handleChange}
         />
         {error ? (
@@ -46,7 +78,7 @@ const AddTodo = () => {
         ) : null}
       </FormControl>
       <Button variant="contained" disableElevation type="submit">
-        Agregar
+        {edit ? "Editar" : "Agregar"}
       </Button>
     </form>
   );

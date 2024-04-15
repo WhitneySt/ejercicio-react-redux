@@ -9,9 +9,9 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
-import { setStatusTodo } from "../redux/todo/todoSlice";
+import { deleteTodo, setStatusTodo } from "../redux/todo/todoSlice";
 
-export default function ListTodo() {
+export default function ListTodo({ setEdit }) {
   const { todo } = useSelector((state) => state.todo);
   console.log(todo);
   const dispatch = useDispatch();
@@ -33,14 +33,14 @@ export default function ListTodo() {
                 <IconButton
                   edge="end"
                   aria-label="comments"
-                  onClick={() => console.log("quiero editar")}
+                  onClick={() => setEdit(item)}
                 >
                   <EditIcon />
                 </IconButton>
                 <IconButton
                   edge="end"
                   aria-label="comments"
-                  onClick={() => console.log("quiero eliminar")}
+                  onClick={() => dispatch(deleteTodo(item.id))}
                 >
                   <ClearIcon />
                 </IconButton>
