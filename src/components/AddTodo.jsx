@@ -73,7 +73,7 @@ const AddTodo = ({ edit = null, setEdit }) => {
         />
         {error ? (
           <FormHelperText id="component-error-text">
-            Agregue una tarea
+            Agregue una descripción de tarea
           </FormHelperText>
         ) : null}
       </FormControl>
