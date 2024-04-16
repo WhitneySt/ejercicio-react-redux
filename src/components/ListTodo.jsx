@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -10,15 +10,25 @@ import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import { deleteTodo, setStatusTodo } from "../redux/todo/todoSlice";
+import { getTasksAction } from "../redux/todo/todoActions";
+import Loading from "./Loading";
+import Error from "./Error";
 
 export default function ListTodo({ setEdit }) {
-  const { todo } = useSelector((state) => state.todo);
-  console.log(todo);
+  const { todo, isLoading, error } = useSelector((state) => state.todo);
+ 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getTasksAction());
+  },[dispatch])
 
   const handleToggleStatus = (idTask) => {
     dispatch(setStatusTodo(idTask));
   };
+
+  if (isLoading) return <Loading/>
+  if(error) return <Error/>
 
   return (
     <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>

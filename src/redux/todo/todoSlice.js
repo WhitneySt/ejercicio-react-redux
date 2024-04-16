@@ -1,40 +1,38 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialTodo = {
-  todo: [
-    { id: 1, task: "Completar curso de JavaScript", status: false },
-    { id: 2, task: "Organizar escritorio", status: true },
-    { id: 3, task: "Preparar cena", status: false },
-    { id: 4, task: "Hacer ejercicio", status: false },
-    { id: 5, task: "Leer un libro", status: true },
-    { id: 6, task: "Visitar a un amigo", status: false },
-    { id: 7, task: "Terminar proyecto de diseño", status: true },
-    { id: 8, task: "Ir al supermercado", status: false },
-    { id: 9, task: "Pagar facturas", status: false },
-    { id: 10, task: "Llamar a un familiar", status: false },
-  ],
+  todo: [],
+  isLoading: false,
+  error: null,
 };
 
 const todoSlice = createSlice({
   name: "todo",
   initialState: initialTodo,
   reducers: {
+    startingTodoFetch: (state) => {
+      state.isLoading = true;
+      state.error = null;
+    },
+    todoFetchSuccess: (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      state.todo = action.payload;
+    },
+    todoFetchFail: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    fillTodo: (state, action) => {
+      state.todo = action.payload;
+    },
     addTodo: (state, action) => {
-      state.todo.push({
-        id: state.todo.length + 1,
-        task: action.payload,
-        status: false,
-      });
+      state.todo.push(action.payload);
+      state.isLoading = false;
     },
     addTask: (state, action) => {
-      state.todo = [
-        ...state.todo,
-        {
-          id: state.todo.length + 1,
-          task: action.payload,
-          status: false,
-        },
-      ];
+      state.todo = [...state.todo, action.payload];
+      state.isLoading = false;
     },
     deleteTodo: (state, action) => {
       const deletedTask = state.todo.filter(
@@ -59,6 +57,13 @@ const todoSlice = createSlice({
   },
 });
 
-export const { addTask, deleteTodo, setStatusTodo, editTask } =
-  todoSlice.actions;
+export const {
+  addTask,
+  deleteTodo,
+  setStatusTodo,
+  editTask,
+  startingTodoFetch,
+  todoFetchSuccess,
+  todoFetchFail,
+} = todoSlice.actions;
 export default todoSlice.reducer;

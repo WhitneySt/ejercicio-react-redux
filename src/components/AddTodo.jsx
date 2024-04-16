@@ -6,6 +6,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
 import { addTask, editTask } from "../redux/todo/todoSlice";
+import { addTaskAction } from "../redux/todo/todoActions";
 
 const AddTodo = ({ edit = null, setEdit }) => {
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ const AddTodo = ({ edit = null, setEdit }) => {
 
   const handleAddTask = () => {
     if (task.trim()) {
-      dispatch(addTask(task));
+      dispatch(addTaskAction(task));
       setTask("");
     } else {
       setError(true);
